@@ -60,6 +60,10 @@ public class Drone : MonoBehaviour
         {
             animator.SetBool("droneArrived", true);
         }
+        else if (transform.position == exitPointPosition)
+        {
+            Destroy(gameObject);
+        }
     }
 
     public bool HandleOrder(Order order)
