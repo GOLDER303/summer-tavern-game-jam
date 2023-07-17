@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 500f;
 
-    private Vector2 moveVector = Vector2.zero;
+    private Vector2 moveVector = Vector2.left;
     private Rigidbody2D playerRigidBody;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
@@ -28,14 +28,17 @@ public class PlayerController : MonoBehaviour
 
     private void OnMove(InputValue inputValue)
     {
-        moveVector = inputValue.Get<Vector2>();
-        animator.SetBool("isMoving", moveVector != Vector2.zero);
+        Vector2 inputVector = inputValue.Get<Vector2>();
+        if (inputVector != Vector2.zero)
+        {
+            moveVector = inputValue.Get<Vector2>();
+        }
 
-        if (moveVector.x > 0)
+        if (moveVector.x < 0)
         {
             spriteRenderer.flipX = true;
         }
-        else if (moveVector.x < 0)
+        else if (moveVector.x > 0)
         {
             spriteRenderer.flipX = false;
         }
