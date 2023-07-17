@@ -6,9 +6,14 @@ public class OrderSpawner : MonoBehaviour
 {
     [SerializeField] GameObject orderPrefab;
 
-    private void Awake()
+    private void OnEnable()
     {
         OrderManager.OnOrderCreation += OnOrderCreation;
+    }
+
+    private void OnDisable()
+    {
+        OrderManager.OnOrderCreation -= OnOrderCreation;
     }
 
     private void OnOrderCreation(OrderSO orderSO)

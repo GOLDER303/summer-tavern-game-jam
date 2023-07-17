@@ -26,8 +26,18 @@ public class Drone : MonoBehaviour
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
+    }
+
+    private void OnEnable()
+    {
         OnDroneGetOrder += MoveInQueue;
         DroneManager.OnDockingStationFreeing += OnDockingStationFreeing;
+    }
+
+    private void OnDisable()
+    {
+        OnDroneGetOrder -= MoveInQueue;
+        DroneManager.OnDockingStationFreeing -= OnDockingStationFreeing;
     }
 
     private void Update()

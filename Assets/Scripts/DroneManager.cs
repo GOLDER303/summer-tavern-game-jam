@@ -13,10 +13,16 @@ public class DroneManager : MonoBehaviour
 
     private int numberOfDronesInQueue = 0;
 
-    private void Awake()
+    private void OnEnable()
     {
         OrderManager.OnOrderCreation += OnOrderCreation;
         Drone.OnDroneGetOrder += OnDroneGetOrder;
+    }
+
+    private void OnDisable()
+    {
+        OrderManager.OnOrderCreation -= OnOrderCreation;
+        Drone.OnDroneGetOrder -= OnDroneGetOrder;
     }
 
     private void OnOrderCreation(OrderSO orderSO)
