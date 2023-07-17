@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D playerRigidBody;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
+    [SerializeField] private GameObject currentInteractionTarget;
+    [SerializeField] private Order currentlyOwnedOrder;
 
     private void Awake()
     {
@@ -39,8 +41,42 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Drone") || other.CompareTag("Order"))
+        {
+            currentInteractionTarget = other.gameObject;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        currentInteractionTarget = null;
+    }
+
     private void OnInteract()
     {
-        //TODO
+        if (currentInteractionTarget == null)
+        {
+            return;
+        }
+
+        if (currentInteractionTarget.CompareTag("Drone"))
+        {
+            if (currentlyOwnedOrder != null)
+            {
+                bool orderAccepted = currentInteractionTarget.GetComponent<Drone>().HandleOrder(currentlyOwnedOrder);
+                if (orderAccepted)
+                {
+                    currentlyOwnedOrder = null;
+                }
+            }
+        }
+        else if (currentInteractionTarget.CompareTag("Order"))
+        {
+            currentlyOwnedOrder = currentInteractionTarget.GetComponent<Order>();
+            currentlyOwnedOrder.PickUpTheOrder(this);
+        }
+
     }
 }
