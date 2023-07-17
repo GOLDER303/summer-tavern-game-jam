@@ -27,6 +27,5 @@ public class OrderSpawner : MonoBehaviour
 
         GameObject spawnedOrder = Instantiate(orderPrefab, transform.position, Quaternion.identity);
         spawnedOrder.GetComponent<Order>().orderSO = orderSO;
-        spawnedOrder.GetComponent<SpriteRenderer>().sprite = orderSO.sprite;
     }
 }
