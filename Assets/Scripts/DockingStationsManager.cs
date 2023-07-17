@@ -29,4 +29,9 @@ public class DockingStationsManager : MonoBehaviour
     {
         return occupiedDockingStations.Count < dockingStationsPositions.Length;
     }
+
+    public void FreeDockingStation(Drone drone)
+    {
+        occupiedDockingStations.Remove(drone.dockingStationPosition);
+    }
 }

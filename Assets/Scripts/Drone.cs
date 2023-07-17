@@ -5,14 +5,14 @@ using UnityEngine;
 
 public class Drone : MonoBehaviour
 {
-    public static Action OnDroneGetOrder;
+    public static Action<Drone> OnDroneFreeingDockingStation;
 
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private Vector3 queueStartPosition;
     [SerializeField] private Vector3 exitPointPosition;
 
-    public Vector3 dockingStationPosition { private get; set; }
-    public int placeInQueue { private get; set; } = 0;
+    public Vector3 dockingStationPosition { get; set; }
+    public int placeInQueue { get; set; } = 0;
     public OrderSO orderSO { private get; set; }
 
     private Rigidbody2D rb2D;
@@ -25,19 +25,16 @@ public class Drone : MonoBehaviour
         rb2D = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-
     }
 
     private void OnEnable()
     {
-        OnDroneGetOrder += MoveInQueue;
-        DroneManager.OnDockingStationFreeing += OnDockingStationFreeing;
+        OnDroneFreeingDockingStation += MoveInQueue;
     }
 
     private void OnDisable()
     {
-        OnDroneGetOrder -= MoveInQueue;
-        DroneManager.OnDockingStationFreeing -= OnDockingStationFreeing;
+        OnDroneFreeingDockingStation -= MoveInQueue;
     }
 
     private void Update()
@@ -65,25 +62,24 @@ public class Drone : MonoBehaviour
         }
     }
 
-    public bool HandleOrder(OrderSO orderSO)
+    public bool HandleOrder(Order order)
     {
-        if (this.orderSO == orderSO)
+        if (this.orderSO == order.orderSO)
         {
             hasOrder = true;
-            OnDroneGetOrder?.Invoke();
+            OnDroneFreeingDockingStation?.Invoke(this);
+            Destroy(order.gameObject);
             return true;
         }
 
         return false;
     }
 
-    private void MoveInQueue()
+    private void MoveInQueue(Drone _)
     {
-        placeInQueue--;
-    }
-
-    private void OnDockingStationFreeing(Vector3 freeDockingStationPosition)
-    {
-        dockingStationPosition = freeDockingStationPosition;
+        if (placeInQueue > 0)
+        {
+            placeInQueue--;
+        }
     }
 }

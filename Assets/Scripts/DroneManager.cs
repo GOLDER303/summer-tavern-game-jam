@@ -5,43 +5,56 @@ using UnityEngine;
 
 public class DroneManager : MonoBehaviour
 {
-    public static Action<Vector3> OnDockingStationFreeing;
 
     [SerializeField] private DroneSpawner droneSpawner;
     [SerializeField] private DockingStationsManager dockingStationsManager;
     [SerializeField] private Vector3 queueStartPosition;
 
-    private int numberOfDronesInQueue = 0;
+    private Queue<Drone> droneQueue = new Queue<Drone>();
 
     private void OnEnable()
     {
         OrderManager.OnOrderCreation += OnOrderCreation;
-        Drone.OnDroneGetOrder += OnDroneGetOrder;
+        Drone.OnDroneFreeingDockingStation += OnDroneFreeingDockingStation;
+        DroneSpawner.OnDroneSpawned += OnDroneSpawned;
     }
 
     private void OnDisable()
     {
         OrderManager.OnOrderCreation -= OnOrderCreation;
-        Drone.OnDroneGetOrder -= OnDroneGetOrder;
+        Drone.OnDroneFreeingDockingStation -= OnDroneFreeingDockingStation;
+        DroneSpawner.OnDroneSpawned -= OnDroneSpawned;
     }
 
     private void OnOrderCreation(OrderSO orderSO)
     {
         if (!dockingStationsManager.IsFreeStationAvailable())
         {
-            numberOfDronesInQueue++;
-            StartCoroutine(droneSpawner.SpawnDrone(orderSO, numberOfDronesInQueue));
+            droneSpawner.SpawnDrone(orderSO, droneQueue.Count + 1);
         }
         else
         {
             Vector3 dockingStationPosition = dockingStationsManager.GetFreeDockingStation();
-            StartCoroutine(droneSpawner.SpawnDrone(orderSO, dockingStationPosition));
+            droneSpawner.SpawnDrone(orderSO, dockingStationPosition);
         }
     }
 
-    private void OnDroneGetOrder()
+    private void OnDroneFreeingDockingStation(Drone drone)
     {
-        numberOfDronesInQueue--;
-        OnDockingStationFreeing?.Invoke(dockingStationsManager.GetFreeDockingStation());
+        dockingStationsManager.FreeDockingStation(drone);
+
+        if (droneQueue.Count > 0)
+        {
+            Drone queuedDrone = droneQueue.Dequeue();
+            queuedDrone.dockingStationPosition = dockingStationsManager.GetFreeDockingStation();
+        }
+    }
+
+    private void OnDroneSpawned(Drone drone)
+    {
+        if (drone.placeInQueue > 0)
+        {
+            droneQueue.Enqueue(drone);
+        }
     }
 }
