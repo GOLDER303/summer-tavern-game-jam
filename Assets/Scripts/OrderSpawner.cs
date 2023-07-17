@@ -26,6 +26,7 @@ public class OrderSpawner : MonoBehaviour
         yield return new WaitForSeconds(orderSO.timeToPrepare);
 
         GameObject spawnedOrder = Instantiate(orderPrefab, transform.position, Quaternion.identity);
+        spawnedOrder.GetComponent<Order>().orderSO = orderSO;
         spawnedOrder.GetComponent<SpriteRenderer>().sprite = orderSO.sprite;
     }
 }
