@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 500f;
+    [SerializeField] private float moveSpeed = 200f;
+    [SerializeField] private float moveSpeedIncreaseSpeed = 10f;
+    [SerializeField] private GameManager gameManager;
+    [SerializeField] private TextMeshProUGUI moveSpeedText;
 
     private Vector2 moveVector = Vector2.left;
     private Rigidbody2D playerRigidBody;
@@ -24,6 +28,12 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         playerRigidBody.velocity = moveVector * moveSpeed * Time.deltaTime;
+    }
+
+    private void Update()
+    {
+        moveSpeed += moveSpeedIncreaseSpeed * Time.deltaTime;
+        moveSpeedText.text = "Move speed: " + (int)moveSpeed;
     }
 
     private void OnMove(InputValue inputValue)
