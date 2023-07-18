@@ -95,6 +95,11 @@ public class PlayerController : MonoBehaviour
             currentlyOwnedOrder = currentInteractionTarget.GetComponent<Order>();
             currentlyOwnedOrder.PickUpTheOrder(this);
         }
+    }
 
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        gameManager.GameOver();
+        Destroy(gameObject);
     }
 }
