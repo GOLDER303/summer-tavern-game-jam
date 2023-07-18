@@ -4,28 +4,15 @@ using UnityEngine;
 
 public class OrderSpawner : MonoBehaviour
 {
-    [SerializeField] GameObject orderPrefab;
+    [SerializeField] private GameObject orderPrefab;
+    [SerializeField] private float spawnRadius = 2f;
 
-    private void OnEnable()
+    public void PrepareOrder(OrderSO orderSO)
     {
-        OrderManager.OnOrderCreation += OnOrderCreation;
-    }
 
-    private void OnDisable()
-    {
-        OrderManager.OnOrderCreation -= OnOrderCreation;
-    }
+        Vector3 spawnLocation = Random.insideUnitCircle.normalized * spawnRadius + new Vector2(transform.position.x, transform.position.y);
 
-    private void OnOrderCreation(OrderSO orderSO)
-    {
-        StartCoroutine(PrepareOrder(orderSO));
-    }
-
-    private IEnumerator PrepareOrder(OrderSO orderSO)
-    {
-        yield return new WaitForSeconds(orderSO.timeToPrepare);
-
-        GameObject spawnedOrder = Instantiate(orderPrefab, transform.position, Quaternion.identity);
+        GameObject spawnedOrder = Instantiate(orderPrefab, spawnLocation, Quaternion.identity);
         spawnedOrder.GetComponent<Order>().orderSO = orderSO;
     }
 }

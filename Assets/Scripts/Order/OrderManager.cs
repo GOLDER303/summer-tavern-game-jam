@@ -7,11 +7,14 @@ public class OrderManager : MonoBehaviour
 {
     public static Action<OrderSO> OnOrderCreation;
 
-    [SerializeField] public OrderSO[] orderSOs;
+    [SerializeField] private OrderSO[] orderSOs;
+    [SerializeField] private OrderSpawner orderSpawner;
 
     public void CreateRandomOrder()
     {
         OrderSO orderSO = orderSOs[UnityEngine.Random.Range(0, orderSOs.Length)];
+        orderSpawner.PrepareOrder(orderSO);
+
         OnOrderCreation?.Invoke(orderSO);
     }
 }
