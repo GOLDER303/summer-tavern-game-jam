@@ -37,6 +37,17 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "",
+                    "id": "3b8fa833-e0f7-43eb-abeb-d0804fa6d213",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
                     "name": "WSAD",
                     "id": "c1f0cb54-57aa-4ead-ba20-bdcd0efdf536",
                     "path": "2DVector",
