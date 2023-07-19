@@ -14,19 +14,19 @@ public class DroneManager : MonoBehaviour
 
     private void OnEnable()
     {
-        OrderManager.OnOrderCreation += OnOrderCreation;
-        Drone.OnDroneFreeingDockingStation += OnDroneFreeingDockingStation;
-        DroneSpawner.OnDroneSpawned += OnDroneSpawned;
+        OrderManager.OnOrderCreation += HandleOrderCreation;
+        Drone.OnDroneFreeingDockingStation += HandleDroneFreeingDockingStation;
+        DroneSpawner.OnDroneSpawned += HandleDroneSpawned;
     }
 
     private void OnDisable()
     {
-        OrderManager.OnOrderCreation -= OnOrderCreation;
-        Drone.OnDroneFreeingDockingStation -= OnDroneFreeingDockingStation;
-        DroneSpawner.OnDroneSpawned -= OnDroneSpawned;
+        OrderManager.OnOrderCreation -= HandleOrderCreation;
+        Drone.OnDroneFreeingDockingStation -= HandleDroneFreeingDockingStation;
+        DroneSpawner.OnDroneSpawned -= HandleDroneSpawned;
     }
 
-    private void OnOrderCreation(OrderSO orderSO)
+    private void HandleOrderCreation(OrderSO orderSO)
     {
         if (!dockingStationsManager.IsFreeStationAvailable())
         {
@@ -39,7 +39,7 @@ public class DroneManager : MonoBehaviour
         }
     }
 
-    private void OnDroneFreeingDockingStation(Drone drone)
+    private void HandleDroneFreeingDockingStation(Drone drone)
     {
         dockingStationsManager.FreeDockingStation(drone);
 
@@ -50,7 +50,7 @@ public class DroneManager : MonoBehaviour
         }
     }
 
-    private void OnDroneSpawned(Drone drone)
+    private void HandleDroneSpawned(Drone drone)
     {
         if (drone.placeInQueue > 0)
         {
